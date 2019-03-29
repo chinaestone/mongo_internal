@@ -17,7 +17,6 @@ cmake .
 make
 
 ./dump db_data_dir db_name collection_name
-
 > generate collection_name.bson
 > bsondump collection_name.bson  # 以json格式查看dump出来的内容
 ```
