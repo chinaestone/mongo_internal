@@ -1,12 +1,26 @@
-»ùÓÚmongodb 2.x.x°æ±¾  
+åŸºäºmongodb 2.x.xç‰ˆæœ¬  
 
 ### dump
-µ¼³öÒ»¸öcollectionµÄËùÓĞ¼ÇÂ¼µ½ÎÄ¼şcollname.bson£¬¿ÉÒÔ±»mongoresotreÊ¹ÓÃ  
-¾ßÌåÔ­Àí¿ÉÒÔ²é¿´[ÕâÆª²©¿Í](http://www.cnblogs.com/tripleH/archive/2013/03/15/2958147.html)
+å¯¼å‡ºä¸€ä¸ªcollectionçš„æ‰€æœ‰è®°å½•åˆ°æ–‡ä»¶collname.bsonï¼Œå¯ä»¥è¢«mongoresotreä½¿ç”¨  
+å…·ä½“åŸç†å¯ä»¥æŸ¥çœ‹[è¿™ç¯‡åšå®¢](http://www.cnblogs.com/tripleH/archive/2013/03/15/2958147.html)
 
 ### print_db_ns
-´òÓ¡Ò»¸ö¿âµÄËùÓĞnamespace
+æ‰“å°ä¸€ä¸ªåº“çš„æ‰€æœ‰namespace
 
 ### print_journal
-´òÓ¡journalÎÄ¼ş  
-¾ßÌåÔ­Àí¿ÉÒÔ²é¿´[ÕâÆª²©¿Í](http://www.cnblogs.com/tripleH/archive/2013/03/21/2972678.html)
+æ‰“å°journalæ–‡ä»¶  
+å…·ä½“åŸç†å¯ä»¥æŸ¥çœ‹[è¿™ç¯‡åšå®¢](http://www.cnblogs.com/tripleH/archive/2013/03/21/2972678.html)
+
+### ç¼–è¯‘è°ƒè¯•
+```shell
+cmake .
+make
+
+./dump db_data_dir db_name collection_name
+
+> generate collection_name.bson
+> bsondump collection_name.bson  # ä»¥jsonæ ¼å¼æŸ¥çœ‹dumpå‡ºæ¥çš„å†…å®¹
+```
+
+
+
