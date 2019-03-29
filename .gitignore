@@ -1,0 +1,9 @@
+CMakeCache.txt
+CMakeFiles/
+Makefile
+account.bson
+cmake_install.cmake
+dump
+print_db_ns
+print_journal
+recover_collection
