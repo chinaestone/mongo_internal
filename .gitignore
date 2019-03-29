@@ -7,3 +7,4 @@ dump
 print_db_ns
 print_journal
 recover_collection
+*.bson
