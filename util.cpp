@@ -31,12 +31,17 @@ int NamespaceHash(const char* p)
     return (x & 0x7fffffff) | 0x8000000; // must be > 0
 }
 
+/**
+ * 查找collection在namespace文件中的详细信息
+*/
 bool findNamespaceDetails(const std::string& nsFileName, const std::string& collname, NamespaceDetails& details)
 {
+    // unsigned long long 长度8字节  64位
     unsigned long long filesize = getFileSize(nsFileName.c_str());
     if (filesize < 0)
         return false;
 
+    // 创建内存映射文件,用于查找文件视图
     MemoryMappedFile mmfile(nsFileName.c_str());
     void* view = mmfile.map();
     if (view == NULL)

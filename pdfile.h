@@ -11,7 +11,8 @@
   */
 struct Namespace
 {
-    enum MaxNsLenValue {
+    enum MaxNsLenValue
+    {
         // Maximum possible length of name any namespace, including special ones like $extra.
         // This includes rum for the NUL byte so it can be used when sizing buffers.
         MaxNsLenWithNUL = 128,
@@ -21,7 +22,7 @@ struct Namespace
 
         // Maximum allowed length of fully qualified namespace name of any real collection.
         // Does not include NUL so it can be directly compared to string lengths.
-        MaxNsColletionLen = MaxNsLen - 7/*strlen(".$extra")*/,
+        MaxNsColletionLen = MaxNsLen - 7 /*strlen(".$extra")*/,
     };
 
     char buf[MaxNsLenWithNUL];
@@ -29,18 +30,22 @@ struct Namespace
 
 // Taken from mongo/db/diskloc.h
 
-/** represents a disk location/offset on disk in a database.  64 bits.
+/** 
+ * 表示数据库中磁盘上的磁盘位置/偏移量。 64位。
+ * 
+ * represents a disk location/offset on disk in a database.  64 bits.
   * it is assumed these will be passed around by value a lot so don't do anything to make them large
   * (such as adding a virtual function)
   */
 struct DiskLoc
 {
-    int _a;     // this will be volume, file #, etc. but is a logical value could be anything depending on storage engine
+    int _a; // this will be volume, file #, etc. but is a logical value could be anything depending on storage engine
     int ofs;
 
     bool isNull() const { return _a == -1; }
 
-    enum SentinelValues {
+    enum SentinelValues
+    {
         /* note NullOfs is different. todo clean up.  see refs to NullOfs in code - use is valid but outside DiskLoc context so confusing as-is. */
         NullOfs = -1,
 
@@ -59,8 +64,9 @@ struct DiskLoc
 
        ** MemoryMapped Record ** (i.e., this is on disk data)
 */
-class IndexDetails {
-public:
+class IndexDetails
+{
+  public:
     /**
         * btree head disk location
         * TODO We should make this variable private, since btree operations
@@ -90,7 +96,12 @@ public:
 const int Buckets = 19;
 struct NamespaceDetails
 {
-    enum { NIndexesMax = 64, NIndexesExtra = 30, NIndexesBase  = 10 };
+    enum
+    {
+        NIndexesMax = 64,
+        NIndexesExtra = 30,
+        NIndexesBase = 10
+    };
 
     /*-------- data fields, as present on disk : */
 
@@ -107,7 +118,8 @@ struct NamespaceDetails
     DiskLoc _deletedList[Buckets];
 
     // ofs 168 (8 byte aligned)
-    struct Stats {
+    struct Stats
+    {
         // datasize and nrecords MUST Be adjacent code assumes!
         long long datasize; // this includes padding, but not record headers
         long long nrecords;
@@ -120,25 +132,25 @@ struct NamespaceDetails
     IndexDetails _indexes[NIndexesBase];
 
     // ofs 352 (16 byte aligned)
-    int _isCapped;                         // there is wasted space here if I'm right (ERH)
-    int _maxDocsInCapped;                  // max # of objects for a capped table, -1 for inf.
+    int _isCapped;        // there is wasted space here if I'm right (ERH)
+    int _maxDocsInCapped; // max # of objects for a capped table, -1 for inf.
 
-    double _paddingFactor;                 // 1.0 = no padding.
+    double _paddingFactor; // 1.0 = no padding.
     // ofs 368 (16)
     int _systemFlags; // things that the system sets/cares about
 
     DiskLoc _capExtent; // the "current" extent we're writing too for a capped collection
     DiskLoc _capFirstNewRecord;
 
-    unsigned short _dataFileVersion;       // NamespaceDetails version.  So we can do backward compatibility in the future. See filever.h
+    unsigned short _dataFileVersion; // NamespaceDetails version.  So we can do backward compatibility in the future. See filever.h
     unsigned short _indexFileVersion;
     unsigned long long _multiKeyIndexBits;
 
     // ofs 400 (16)
     unsigned long long _reservedA;
-    long long _extraOffset;               // where the $extra info is located (bytes relative to this)
+    long long _extraOffset; // where the $extra info is located (bytes relative to this)
 
-    int _indexBuildsInProgress;            // Number of indexes currently being built
+    int _indexBuildsInProgress; // Number of indexes currently being built
 
     int _userFlags;
     char _reserved[72];
@@ -166,47 +178,57 @@ struct Node
 
 // Taken from mongo/db/storage/extent.h
 
-/* extents are datafile regions where all the records within the region
-       belong to the same namespace.
+/**
+ * extents是数据文件区域，其中包含区域内的所有记录属于同一名称空间。
+ * 
+ * extents are datafile regions where all the records within the region
+ * belong to the same namespace.
   */
-class Extent {
-    public:
-        enum { extentSignature = 0x41424344 };
-        unsigned magic;
-        DiskLoc myLoc;
-        DiskLoc xnext, xprev; /* next/prev extent for this namespace */
+class Extent
+{
+  public:
+    enum
+    {
+        extentSignature = 0x41424344
+    };
+    unsigned magic;
+    DiskLoc myLoc;
+    DiskLoc xnext, xprev; /* next/prev extent for this namespace */
 
-        /* which namespace this extent is for.  this is just for troubleshooting really
+    /* which namespace this extent is for.  this is just for troubleshooting really
            and won't even be correct if the collection were renamed!
         */
-        Namespace nsDiagnostic;
+    Namespace nsDiagnostic;
 
-        int length;   /* size of the extent, including these fields */
-        DiskLoc firstRecord;
-        DiskLoc lastRecord;
-        char _extentData[4];
+    int length; /* size of the extent, including these fields */
+    DiskLoc firstRecord;
+    DiskLoc lastRecord;
+    char _extentData[4];
 
-        static int HeaderSize() { return sizeof(Extent)-4; }
+    static int HeaderSize() { return sizeof(Extent) - 4; }
 };
 
 // Taken from mongo/db/storage/record.h
 
 /* Record is a record in a datafile.  DeletedRecord is similar but for deleted space.
  */
-class Record {
-    public:
-        enum HeaderSizeValue { HeaderSize = 16 };
+class Record
+{
+  public:
+    enum HeaderSizeValue
+    {
+        HeaderSize = 16
+    };
 
+    int netLength() const { return _lengthWithHeaders - HeaderSize; }
 
-        int netLength() const { return _lengthWithHeaders - HeaderSize; }
+    int _lengthWithHeaders;
+    int _extentOfs;
+    int _nextOfs;
+    int _prevOfs;
 
-        int _lengthWithHeaders;
-        int _extentOfs;
-        int _nextOfs;
-        int _prevOfs;
-
-        /** be careful when referencing this that your write intent was correct */
-        char _data[4];
+    /** be careful when referencing this that your write intent was correct */
+    char _data[4];
 };
 
 // Taken from mongo/db/storage/data_file.h
@@ -224,8 +246,9 @@ class Record {
           more Extents...
           ----------------------
     */
-class DataFileHeader {
-public:
+class DataFileHeader
+{
+  public:
     int version;
     int versionMinor;
     int fileLength;
@@ -233,11 +256,14 @@ public:
     int unusedLength;
     DiskLoc freeListStart;
     DiskLoc freeListEnd;
-    char reserved[8192 - 4*4 - 8*3];
+    char reserved[8192 - 4 * 4 - 8 * 3];
 
     char data[4]; // first extent starts here
 
-    enum { HeaderSize = 8192 };
+    enum
+    {
+        HeaderSize = 8192
+    };
 };
 
 #pragma pack()
